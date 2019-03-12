@@ -53,8 +53,9 @@ def vote():
     return "{ok\:Your vote was recorded! Thanks so much for voting in the CCSS general elections!}"
 
 if __name__ == '__main__':
-   app.run(
+    app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+
+    app.run(
        debug=False,
        host="0.0.0.0",
-       SECRET_KEY=os.getenv("SECRET_KEY"),
     )
