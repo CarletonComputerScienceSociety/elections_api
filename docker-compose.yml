@@ -9,8 +9,7 @@ services:
 
   # Nginx
   nginx-ssl-proxy:
-    build:
-      context: nginx-ssl/
+    image: danieldent/nginx-ssl-proxy
     restart: always
     environment:
       SERVERNAME: elections.ccss.carleton.ca
