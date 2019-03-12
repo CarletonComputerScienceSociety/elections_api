@@ -23,7 +23,6 @@ CCSS_IV = os.getenv("CCSS_IV")
 # Only need to accept post requests, can ignore everything else
 @app.route('/', methods=['POST'])
 def vote():
-    return "Working"
     scs_key_url_encrypted = request.form['scs_key']
     client_vote = request.form['vote']
 
