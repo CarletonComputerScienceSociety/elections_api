@@ -12,7 +12,7 @@ services:
     image: danieldent/nginx-ssl-proxy
     restart: always
     environment:
-      UPSTREAM: 127.0.0.1:5000
+      UPSTREAM: elections-api:5000
       SERVERNAME: elections.ccss.carleton.ca
     ports:
       - "80:80"
