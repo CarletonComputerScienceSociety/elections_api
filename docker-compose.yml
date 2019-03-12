@@ -6,3 +6,17 @@ services:
       dockerfile: Dockerfile
     ports:
       - 5000:5000
+
+  # Nginx
+  nginx-ssl-proxy:
+    build:
+      context: nginx-ssl/
+    restart: always
+    environment:
+      SERVERNAME: elections.ccss.carleton.ca
+      EXTRANAMES: elections.ccss.carleton.ca
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/etc/letsencrypt"
