@@ -4,17 +4,15 @@ app = Flask(__name__)
 
 # ENV
 from dotenv import load_dotenv
-import os
 load_dotenv()
 
 # TINYDB
 from tinydb import TinyDB, Query
 db = TinyDB('database.json')
 
-# URLLib
-import urllib
-
 # Other
+import os
+import urllib
 import subprocess
 
 CCSS_SHARED_KEY = os.getenv("CCSS_SHARED_KEY")
@@ -26,7 +24,11 @@ def vote():
     scs_key_url_encrypted = request.form['scs_key']
     client_vote = request.form['vote']
 
+    # The key is sent url encrypted by the SCS, so it needs to be decoded
     scs_encrypted_key = urllib.parse.unquote(scs_key_url_encrypted)
+
+    # The decryption is done in a subprocess in PHP because
+    # decryption is not working in Python
     scs_decryption_process = subprocess.run(
         ['php', 'decrypt.php', CCSS_SHARED_KEY, CCSS_IV],
         stdout=subprocess.PIPE,                     # The output from the PHP script
