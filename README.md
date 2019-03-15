@@ -30,5 +30,5 @@ Generates a .env file for the SCS secret keys.
 ### Licence
 Standard MIT licence.
 
-### main.py
+### server.py
 The Flask server that listens for votes.
