@@ -4,19 +4,25 @@ app = Flask(__name__)
 
 # ENV
 from dotenv import load_dotenv
-load_dotenv()
 
 # TINYDB
 from tinydb import TinyDB, Query
-db = TinyDB('database.json')
 
 # Other
 import os
 import urllib
 import subprocess
 
+# Other functions
+import util.functions
+
+load_dotenv()
+
 CCSS_SHARED_KEY = os.getenv("CCSS_SHARED_KEY")
 CCSS_IV = os.getenv("CCSS_IV")
+
+vote_database = TinyDB('database/database.json')
+candidates_database = TinyDB('database/candidates.json')
 
 # Only need to accept post requests, can ignore everything else
 @app.route('/', methods=['POST'])
@@ -44,7 +50,7 @@ def vote():
     # If we get this far without an error, then we know that the user's
     # ciphertext is valid, and was encrypted by the SCS.
 
-    db.insert({
+    vote_database.insert({
         'time': time,
         'user': user,
         'ip': ip,

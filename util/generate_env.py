@@ -4,5 +4,5 @@ out_text = "# The shared key given by the SCS must be entered here\nCCSS_SHARED_
 out_text += "SECRET_KEY=" + str(''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(64))
 )
 
-with open(".env", "w") as text_file:
+with open("../.env", "w") as text_file:
     text_file.write(out_text)

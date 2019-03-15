@@ -12,23 +12,32 @@ Environment variables for the server, it is gitignored so it is not seen on the 
 ### .gitignore
 Prevents certain files from being checked into Git.
 
-### database.json
+### database/candidates.json
+Stores the candidates of election for validation 
+
+### database/database.json
 Stores all of the votes. Not on the repo because it is generated on the server.
 
-### decrypt.php
+### util/decrypt.php
 Used to decrypt the AES-256 ciphertext from the SCS.
 
-### docker-compose.yml
+### util/docker-compose.yml
 Used to run the server, as well as a reverse proxy with SSL.
 
-### Dockerfile
+### util/Dockerfile
 Dictates how to build an image that will run the Python server.
 
-### generate_env.py
+### util/generate_env.py
 Generates a .env file for the SCS secret keys.
 
 ### Licence
 Standard MIT licence.
 
+### requirements.txt
+Python server requirements
+
 ### server.py
 The Flask server that listens for votes.
+
+### start.sh
+Script to start the server
