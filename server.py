@@ -9,12 +9,10 @@ from dotenv import load_dotenv
 from tinydb import TinyDB, Query
 
 # Other
-import os
-import urllib
-import subprocess
+import os, urllib, subprocess, json
 
 # Other functions
-import util.functions
+from util.functions import *
 
 load_dotenv()
 
@@ -22,7 +20,7 @@ CCSS_SHARED_KEY = os.getenv("CCSS_SHARED_KEY")
 CCSS_IV = os.getenv("CCSS_IV")
 
 vote_database = TinyDB('database/database.json')
-candidates_database = TinyDB('database/candidates.json')
+candidates = load_candidates()
 
 # Only need to accept post requests, can ignore everything else
 @app.route('/', methods=['POST'])
@@ -49,6 +47,10 @@ def vote():
 
     # If we get this far without an error, then we know that the user's
     # ciphertext is valid, and was encrypted by the SCS.
+
+    validate_vote(client_vote, candidates)
+
+    return "good"
 
     vote_database.insert({
         'time': time,
