@@ -34,13 +34,13 @@ def vote():
     # The decryption is done in a subprocess in PHP because
     # decryption is not working in Python
     scs_decryption_process = subprocess.run(
-        ['php', 'decrypt.php', CCSS_SHARED_KEY, CCSS_IV],
+        ['php', 'util/decrypt.php', CCSS_SHARED_KEY, CCSS_IV],
         stdout=subprocess.PIPE,                     # The output from the PHP script
         input=bytes(scs_encrypted_key, 'utf-8'),    # Passed as input to prevent command line injection
         check=True
     )
-
-    separated = str(decryption_process.stdout).split(" ")
+    
+    separated = str(scs_decryption_process.stdout).split(" ")
     time = separated[0].split("=")[1]
     user = separated[1].split("=")[1]
     ip = separated[2].split("=")[1]
@@ -48,18 +48,19 @@ def vote():
     # If we get this far without an error, then we know that the user's
     # ciphertext is valid, and was encrypted by the SCS.
 
-    validate_vote(client_vote, candidates)
+    result = validate_vote(client_vote, candidates)
 
-    return "good"
+    if (result[0] == 1):
+        vote_database.insert({
+            'time': time,
+            'user': user,
+            'ip': ip,
+            'vote': client_vote
+        })
 
-    vote_database.insert({
-        'time': time,
-        'user': user,
-        'ip': ip,
-        'vote': client_vote
-    })
-
-    return "{ok\:Your vote was recorded! Thanks so much for voting in the CCSS general elections!}"
+        return "{ok\:Your vote was recorded! Thanks so much for voting in the CCSS general elections!}"
+    else:
+        return "{error\:" + result[1] + "}"
 
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
