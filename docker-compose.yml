@@ -6,6 +6,8 @@ services:
       dockerfile: util/Dockerfile
     ports:
       - 5000:5000
+    networks: 
+      - backend
 
   # Nginx
   nginx-ssl-proxy:
@@ -19,3 +21,9 @@ services:
       - "443:443"
     volumes:
       - /etc/letsencrypt
+    networks: 
+      - backend
+
+networks:
+  backend:
+    driver: "bridge"
