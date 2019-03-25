@@ -20,13 +20,21 @@ CCSS_SHARED_KEY = os.getenv("CCSS_SHARED_KEY")
 CCSS_IV = os.getenv("CCSS_IV")
 
 vote_database = TinyDB('database/database.json')
+vote_query = Query()
 candidates = load_candidates()
+
+log_database = TinyDB('database/log.json')
 
 # Only need to accept post requests, can ignore everything else
 @app.route('/', methods=['POST'])
 def vote():
     scs_key_url_encrypted = request.form['scs_key']
     client_vote = request.form['vote']
+
+    log_database.insert({
+        'key': scs_key_url_encrypted,
+        'vote': client_vote
+    })
 
     # The key is sent url encrypted by the SCS, so it needs to be decoded
     scs_encrypted_key = urllib.parse.unquote(scs_key_url_encrypted)
@@ -48,6 +56,10 @@ def vote():
     # If we get this far without an error, then we know that the user's
     # ciphertext is valid, and was encrypted by the SCS.
 
+    duplicate_user_votes = vote_database.search(vote_query.user == user)
+
+    print(len(duplicate_user_votes))
+
     result = validate_vote(client_vote, candidates)
 
     if (result[0] == 1):
@@ -58,9 +70,12 @@ def vote():
             'vote': client_vote
         })
 
-        return "{ok\:Your vote was recorded! Thanks so much for voting in the CCSS general elections!}"
+        if (len(duplicate_user_votes) > 0):
+            return "You have already voted! We deleted your old vote and replaced it with this one."
+        else:
+            return "Your vote was recorded! Thanks so much for voting in the CCSS general elections!"
     else:
-        return "{error\:" + result[1] + "}"
+        return result[1]
 
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
