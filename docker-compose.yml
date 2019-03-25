@@ -3,7 +3,7 @@ services:
   elections-api:
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: util/Dockerfile
     ports:
       - 5000:5000
 
