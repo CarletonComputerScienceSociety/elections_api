@@ -1,6 +1,5 @@
 # FLASK
 from flask import Flask, request
-from flask_api import status
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -34,11 +33,11 @@ def vote():
     try:
         request_data = json.loads(request.data)
     except:
-        return "Error, invalid json", HTTP_400_BAD_REQUEST
+        return "Error, invalid json", 400
     
     if('scs_key' not in request_data or request_data['scs_key'] == None):
         print("THE SCS_KEY IS NULL OR INVALID")
-        return "Error, scs_key is required", HTTP_400_BAD_REQUEST
+        return "Error, scs_key is required", 400
 
     scs_key_url_encrypted = request_data['scs_key']
     client_vote = request_data['vote']
@@ -70,7 +69,7 @@ def vote():
         user = separated[1].split("=")[1]
         ip = separated[2].split("=")[1]
     except:
-        return "Error, invalid ciphertext", HTTP_400_BAD_REQUEST
+        return "Error, invalid ciphertext", 400
 
     # If we get this far without an error, then we know that the user's
     # ciphertext is valid, and was encrypted by the SCS.
@@ -88,11 +87,11 @@ def vote():
         })
 
         if (len(duplicate_user_votes) > 0):
-            return "You have already voted! We deleted your old vote and replaced it with this one.", HTTP_200_OK
+            return "You have already voted! We deleted your old vote and replaced it with this one.", 200
         else:
-            return "Your vote was recorded! Thanks so much for voting in the CCSS general elections!", HTTP_200_OK
+            return "Your vote was recorded! Thanks so much for voting in the CCSS general elections!", 200
     else:
-        return result[1], HTTP_400_BAD_REQUEST
+        return result[1], 400
 
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
