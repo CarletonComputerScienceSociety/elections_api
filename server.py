@@ -30,8 +30,13 @@ log_database = TinyDB('database/log.json')
 # Only need to accept post requests, can ignore everything else
 @app.route('/', methods=['POST'])
 def vote():
-    scs_key_url_encrypted = request.form['scs_key']
-    client_vote = request.form['vote']
+    try:
+        request_data = json.loads(request.data)
+    except:
+        return [-1, "Error, invalid json"]
+
+    scs_key_url_encrypted = request_data['scs_key']
+    client_vote = request_data['vote']
 
     log_database.insert({
         'key': scs_key_url_encrypted,
@@ -59,8 +64,6 @@ def vote():
     # ciphertext is valid, and was encrypted by the SCS.
 
     duplicate_user_votes = vote_database.search(vote_query.user == user)
-
-    print(len(duplicate_user_votes))
 
     result = validate_vote(client_vote, candidates)
 

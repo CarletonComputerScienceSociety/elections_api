@@ -1,11 +1,6 @@
 import json
 
-def validate_vote(client_vote_json, candidates):
-    # First, validate valid json
-    try:
-        client_vote = json.loads(client_vote_json)
-    except:
-        return [-1, "Error, invalid json"]
+def validate_vote(client_vote, candidates):
 
     # Next, validate the number of categories submitted
     if (len(client_vote.keys()) != len(candidates.keys())):
