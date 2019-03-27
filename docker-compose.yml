@@ -25,11 +25,11 @@ services:
       - /etc/letsencrypt
     networks:
       elec-net:
-        ipv4_address: 192.168.86.86
+        ipv4_address: 192.168.123.123
 
 networks:
   elec-net:
     ipam:
       driver: default
       config:
-        - subnet: 192.168.86.0/24
+        - subnet: 192.168.123.0/24
