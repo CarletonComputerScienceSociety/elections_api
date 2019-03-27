@@ -3,20 +3,33 @@ services:
   elections-api:
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: util/Dockerfile
     ports:
       - 5000:5000
+    volumes:
+      - "./database/:/app/database/"
+    networks:
+      - elec-net
 
   # Nginx
   nginx-ssl-proxy:
-    build:
-      context: nginx-ssl/
+    image: danieldent/nginx-ssl-proxy
     restart: always
     environment:
+      UPSTREAM: elections-api:5000
       SERVERNAME: elections.ccss.carleton.ca
-      EXTRANAMES: elections.ccss.carleton.ca
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - "/etc/letsencrypt"
+      - /etc/letsencrypt
+    networks:
+      elec-net:
+        ipv4_address: 192.168.123.123
+
+networks:
+  elec-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.123.0/24

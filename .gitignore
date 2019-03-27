@@ -1,1 +1,6 @@
 .env
+
+database/database.json
+database/log.json
+
+*.pyc
