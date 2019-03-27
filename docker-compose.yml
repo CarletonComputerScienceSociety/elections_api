@@ -8,6 +8,8 @@ services:
       - 5000:5000
     volumes:
       - "./database/:/app/database/"
+    networks:
+      - elec-net
 
   # Nginx
   nginx-ssl-proxy:
@@ -21,3 +23,13 @@ services:
       - "443:443"
     volumes:
       - /etc/letsencrypt
+    networks:
+      elec-net:
+        ipv4_address: 192.168.86.86
+
+networks:
+  elec-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.86.0/24
