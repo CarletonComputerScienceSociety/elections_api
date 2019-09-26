@@ -22,7 +22,7 @@ def validate_vote(client_vote, candidates):
     return [1, "Valid"]
 
 def load_candidates():
-    with open('database/candidates.json') as f:
+    with open('../database/candidates.json') as f:
         candidates_db = json.load(f)
 
     candidates = {}

@@ -1,5 +1,5 @@
 # FLASK
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -21,11 +21,15 @@ load_dotenv()
 CCSS_SHARED_KEY = os.getenv("CCSS_SHARED_KEY")
 CCSS_IV = os.getenv("CCSS_IV")
 
-vote_database = TinyDB('database/database.json')
+vote_database = TinyDB('../database/database.json')
 vote_query = Query()
 candidates = load_candidates()
 
-log_database = TinyDB('database/log.json')
+log_database = TinyDB('../database/log.json')
+
+@app.route('/', methods=['GET']):
+def elections_page():
+    return flask.render_template()
 
 # Only need to accept post requests, can ignore everything else
 @app.route('/', methods=['POST'])
@@ -53,7 +57,6 @@ def vote():
 
     # The decryption is done in a subprocess in PHP because
     # decryption is not working in Python
-
     scs_decryption_process = subprocess.run(
         ['php', 'util/decrypt.php', CCSS_SHARED_KEY, CCSS_IV],
         stdout=subprocess.PIPE,                     # The output from the PHP script
